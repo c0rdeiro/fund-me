@@ -5,19 +5,19 @@ import {PriceConverter} from "./PriceConverter.sol";
 contract FundMe {
     using PriceConverter for uint256;
 
-    uint256 public minimunUsd = 5e18;
+    uint256 public constant MINIMUM_USD = 5e18;
 
     address[] public funders;
     mapping(address funder => uint256 amountFunded) public addressToAmountFunded;
 
-    address public owner;
+    address public immutable i_owner;
 
     constructor() {
-        owner = msg.sender;
+        i_owner = msg.sender;
     }
 
     function fund() public payable {
-        require(msg.value.getConversionRate() >= minimunUsd, "Did not send enough ETH."); //1 ETH
+        require(msg.value.getConversionRate() >= MINIMUM_USD, "Did not send enough ETH."); //1 ETH
         
         funders.push(msg.sender);
         addressToAmountFunded[msg.sender] += msg.value;
@@ -38,7 +38,7 @@ contract FundMe {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == owner, "Must be the owner of the contract.");
+        require(msg.sender == i_owner, "Must be the owner of the contract.");
         _;
     } 
     
