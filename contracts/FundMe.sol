@@ -24,8 +24,7 @@ contract FundMe {
 
     }
 
-    function withdraw() public {
-        require(msg.sender == owner, "Must be the owner of the contract");
+    function withdraw() public onlyOwner{
 
         for (uint256 funderIndex = 0; funderIndex < funders.length; funderIndex ++) {
             
@@ -38,5 +37,10 @@ contract FundMe {
         }
     }
 
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Must be the owner of the contract.");
+        _;
+    } 
+    
   
 }
